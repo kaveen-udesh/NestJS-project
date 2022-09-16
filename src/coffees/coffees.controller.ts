@@ -15,7 +15,7 @@ import { UpdateCoffeeDto } from './dto/update-coffee.dto';
 
 @Controller('coffees')
 export class CoffeesController {
-  constructor(private readonly coffeesService: CoffeesService) {}
+  constructor(private readonly coffeesService: CoffeesService) { }
 
   @Get()
   findAll(@Query() paginationQuery) {
@@ -26,7 +26,7 @@ export class CoffeesController {
   @Get(':id')
   findOne(@Param('id') id: number) {
     console.log(typeof id);
-    return this.coffeesService.findOne('' + id);
+    return this.coffeesService.findOne(id);
   }
 
   @Post()
@@ -42,6 +42,6 @@ export class CoffeesController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.coffeesService.remove(id);
+    return this.coffeesService.remove(Number(id));
   }
 }
