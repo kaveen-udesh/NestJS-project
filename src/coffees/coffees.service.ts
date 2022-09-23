@@ -10,6 +10,8 @@ import { Flavor } from './entities/flavor.entity';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { Event } from 'src/events/entities/event.entity';
 import { COFFEE_BRANDS } from './coffees.constants';
+import { ConfigService, ConfigType } from '@nestjs/config';
+import coffeesConfig from './config/coffees.config';
 
 @Injectable({ scope: Scope.REQUEST })
 export class CoffeesService {
@@ -19,9 +21,10 @@ export class CoffeesService {
     @InjectRepository(Flavor)
     private readonly flavorRepository: Repository<Flavor>,
     private readonly connection: Connection,
-    @Inject(COFFEE_BRANDS) coffeeBrands: string[],
+    @Inject(coffeesConfig.KEY)
+    private readonly coffeesConfiguration: ConfigType<typeof coffeesConfig>
   ) {
-    console.log('CoffeesService');
+    console.log(coffeesConfiguration.foo);
   }
 
   findAll(paginationQuery: PaginationQueryDto) {
@@ -46,7 +49,7 @@ export class CoffeesService {
 
   async create(createCoffeeDto: CreateCoffeeDto) {
     const flavors = await Promise.all(
-      createCoffeeDto.flavors.map((name) => this.preloadFlavorByName(name)),
+      createCoffeeDto.flavors.map((name) => this.preloadFlavorByName(name))
     );
 
     const coffee = this.coffeeRepository.create({
@@ -60,7 +63,7 @@ export class CoffeesService {
     const flavors =
       updateCoffeeDto.flavors &&
       (await Promise.all(
-        updateCoffeeDto.flavors.map((name) => this.preloadFlavorByName(name)),
+        updateCoffeeDto.flavors.map((name) => this.preloadFlavorByName(name))
       ));
 
     const coffee = await this.coffeeRepository.preload({
