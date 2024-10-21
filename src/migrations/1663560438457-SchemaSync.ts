@@ -1,8 +1,8 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class SchemaSync1663560438457 implements MigrationInterface {
-  name = 'SchemaSync1663560438457';
 
+  // Adds a new column description to the coffee table
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
       `ALTER TABLE "coffee" ADD "description" character varying`,
@@ -10,6 +10,7 @@ export class SchemaSync1663560438457 implements MigrationInterface {
     );
   }
 
+  // Removes the 'description' column from the 'coffee' table
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
       `ALTER TABLE "coffee" DROP COLUMN "description"`,
